@@ -271,6 +271,56 @@ public class Redis
     @Test
     void msetnx()
     {
-
+        /*
+        将相应的键设置为相应的值。
+        MSET将用新值替换旧值，而 MSETNX 根本不会执行任何操作，即使只有一个键已经存在。
+        由于这种语义，可以使用 MSETNX 来设置表示唯一逻辑对象的不同字段的不同键，以确保设置所有字段或根本没有设置。
+        MSET 和 MSETNX 都是原子操作。这意味着，例如，如果密钥 A 和 B 被修改
+        ，另一个与 Redis 通信的连接可以同时看到 A 和 B 的更改，或者根本没有修改。
+        */
+        long msetnx = jedis.msetnx("key4", "value4", "key7", "value7");
+        System.out.println(msetnx);
+        msetnx = jedis.msetnx("key8", "value8", "key7", "value7");
+        System.out.println(msetnx);
     }
+
+    @Test
+    void setbit()
+    {
+        //设置或清除存储在 key 的字符串值的偏移量位
+        boolean b = jedis.setbit("key7", 2, true);
+        System.out.println(b);
+    }
+
+    @Test
+    void setex()
+    {
+        //该命令完全等同于以下命令组： SET + EXPIRE 。
+        //操作是原子的。
+        //时间复杂度：O(1)
+        String setex = jedis.setex("key8", 20, "hello");
+        System.out.println(setex);
+        System.out.println(jedis.ttl("key8"));
+    }
+
+    @Test
+    void strlen()
+    {
+        //返回存储在 key 处的字符串值的长度
+        long strlen = jedis.strlen("key4");
+        System.out.println(strlen);
+    }
+
+    @Test
+    void setnx()
+    {
+        //SETNX 的工作方式与SET完全相同，唯一的区别是如果密钥已经存在，
+        //则不执行任何操作。 SETNX 实际上的意思是“如果不存在则设置”。
+        //时间复杂度：O(1)
+        long setnx = jedis.setnx("key9", "v");
+        System.out.println(setnx);
+        setnx = jedis.setnx("key6", "v");
+        System.out.println(setnx);
+    }
+
 }
