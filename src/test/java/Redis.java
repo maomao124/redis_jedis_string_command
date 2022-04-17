@@ -41,22 +41,35 @@ import java.util.Set;
  * ---SETRANGE	        从偏移量 offset 开始，使用指定的 value 覆盖的 key 所存储的部分字符串值
  */
 
+
 public class Redis
 {
+    /**
+     * The Jedis.
+     */
     static Jedis jedis;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp()
     {
         System.out.println("-----");
     }
 
+    /**
+     * Tear down.
+     */
     @AfterEach
     void tearDown()
     {
         System.out.println("-----");
     }
 
+    /**
+     * Before all.
+     */
     @BeforeAll
     static void beforeAll()
     {
@@ -65,6 +78,9 @@ public class Redis
         System.out.println("启动");
     }
 
+    /**
+     * After all.
+     */
     @AfterAll
     static void afterAll()
     {
@@ -72,6 +88,9 @@ public class Redis
         jedis.close();
     }
 
+    /**
+     * Set.
+     */
     @Test
     void set()
     {
@@ -79,6 +98,9 @@ public class Redis
         System.out.println(set);
     }
 
+    /**
+     * Append.
+     */
     @Test
     void append()
     {
@@ -94,6 +116,9 @@ public class Redis
         System.out.println(key2);
     }
 
+    /**
+     * Bitcount.
+     */
     @Test
     void bitcount()
     {
@@ -101,6 +126,9 @@ public class Redis
         System.out.println(jedis.bitcount("key2", 2, 7));
     }
 
+    /**
+     * Decr.
+     */
     @Test
     void decr()
     {
@@ -119,6 +147,9 @@ public class Redis
         System.out.println(jedis.decr("key3"));
     }
 
+    /**
+     * Decr by.
+     */
     @Test
     void decrBy()
     {
@@ -137,6 +168,9 @@ public class Redis
         System.out.println(jedis.decrBy("key3", -3));
     }
 
+    /**
+     * Get.
+     */
     @Test
     void get()
     {
@@ -149,6 +183,9 @@ public class Redis
         System.out.println(jedis.get("key22"));
     }
 
+    /**
+     * Gets .
+     */
     @Test
     void getbit()
     {
@@ -157,6 +194,9 @@ public class Redis
         System.out.println(jedis.getbit("key2", 3));
     }
 
+    /**
+     * Gets range.
+     */
     @Test
     void getRange()
     {
@@ -175,6 +215,9 @@ public class Redis
         System.out.println(jedis.getrange("key2", -994, 7));
     }
 
+    /**
+     * Gets .
+     */
     @Test
     void getset()
     {
@@ -187,6 +230,9 @@ public class Redis
         System.out.println(jedis.getSet("key2", "hello-world"));
     }
 
+    /**
+     * Incr.
+     */
     @Test
     void incr()
     {
@@ -205,6 +251,9 @@ public class Redis
         System.out.println(jedis.incr("key3"));
     }
 
+    /**
+     * Incr by.
+     */
     @Test
     void incrBy()
     {
@@ -223,6 +272,9 @@ public class Redis
         System.out.println(jedis.incrBy("key3", -6));
     }
 
+    /**
+     * Incr by float.
+     */
     @Test
     void incrByFloat()
     {
@@ -241,6 +293,9 @@ public class Redis
         System.out.println(jedis.incrByFloat("key3", -7.6));
     }
 
+    /**
+     * Mget.
+     */
     @Test
     void mget()
     {
@@ -252,6 +307,9 @@ public class Redis
         System.out.println(list);
     }
 
+    /**
+     * Mset.
+     */
     @Test
     void mset()
     {
@@ -268,6 +326,9 @@ public class Redis
         System.out.println(keys);
     }
 
+    /**
+     * Msetnx.
+     */
     @Test
     void msetnx()
     {
@@ -284,6 +345,9 @@ public class Redis
         System.out.println(msetnx);
     }
 
+    /**
+     * Sets .
+     */
     @Test
     void setbit()
     {
@@ -292,6 +356,9 @@ public class Redis
         System.out.println(b);
     }
 
+    /**
+     * Sets .
+     */
     @Test
     void setex()
     {
@@ -303,6 +370,9 @@ public class Redis
         System.out.println(jedis.ttl("key8"));
     }
 
+    /**
+     * Strlen.
+     */
     @Test
     void strlen()
     {
@@ -311,6 +381,9 @@ public class Redis
         System.out.println(strlen);
     }
 
+    /**
+     * Sets .
+     */
     @Test
     void setnx()
     {
@@ -323,4 +396,20 @@ public class Redis
         System.out.println(setnx);
     }
 
+    /**
+     * Sets range.
+     */
+    @Test
+    void setRange()
+    {
+        /*
+         * GETRANGE 覆盖存储在 key 处的部分字符串，从指定的偏移量开始，
+         * 覆盖 value 的整个长度。如果偏移量大于 key 处字符串的当前长度，
+         * 则用零字节填充字符串以使偏移量适合。
+         * 不存在的键被视为空字符串，因此此命令将确保它包含一个足够大的字符串，以便能够在偏移量处设置值。
+         * 时间复杂度：O(1)*/
+        System.out.println(jedis.get("key4"));
+        System.out.println(jedis.setrange("key4", 3, "11111111111111111"));
+        System.out.println(jedis.get("key4"));
+    }
 }
