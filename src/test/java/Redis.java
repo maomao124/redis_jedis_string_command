@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.*;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Project name(项目名称)：redis_jedis_string_command
  * Package(包名): PACKAGE_NAME
@@ -172,5 +175,102 @@ public class Redis
         System.out.println(jedis.getrange("key2", -994, 7));
     }
 
+    @Test
+    void getset()
+    {
+        /*
+        GETSET 是一个原子设置这个值并返回旧值的命令。
+        将 key 设置为字符串值并返回存储在 key 中的旧值。
+        字符串不能超过 1073741824 字节 (1 GB)。
+        时间复杂度：O(1)
+        */
+        System.out.println(jedis.getSet("key2", "hello-world"));
+    }
 
+    @Test
+    void incr()
+    {
+        /*
+        将 key 中存储的数字加一。如果键不存在或包含错误类型的值，请在执行递增操作之前将键设置为“0”值。
+        INCR 命令仅限于 64 位有符号整数。
+        注意：这实际上是一个字符串操作，
+        也就是说，在 Redis 中没有“整数”类型。
+        只需将存储在密钥中的字符串解析为基数为 10 的 64 位有符号整数，递增，然后转换回字符串。
+        时间复杂度：O(1)
+        */
+        System.out.println(jedis.set("key3", "57"));
+        System.out.println(jedis.expire("key3", 100));
+        System.out.println(jedis.incr("key3"));
+        System.out.println(jedis.incr("key3"));
+        System.out.println(jedis.incr("key3"));
+    }
+
+    @Test
+    void incrBy()
+    {
+        /*
+        INCRBY 的工作方式与INCR类似，但增量为 1，增量为整数。
+        INCR 命令仅限于 64 位有符号整数。
+        注意：这实际上是一个字符串操作，也就是说，
+        在 Redis 中没有“整数”类型。只需将存储在密钥中的字符串解析为基数为 10 的 64 位有符号整数，递增，然后转换回字符串。
+        时间复杂度：O(1)
+        */
+        System.out.println(jedis.set("key3", "57"));
+        System.out.println(jedis.expire("key3", 100));
+        System.out.println(jedis.incrBy("key3", 10));
+        System.out.println(jedis.incrBy("key3", 10));
+        System.out.println(jedis.incrBy("key3", 2));
+        System.out.println(jedis.incrBy("key3", -6));
+    }
+
+    @Test
+    void incrByFloat()
+    {
+        /*
+        INCRBYFLOAT 命令仅限于双精度浮点值。
+        注意：这实际上是一个字符串操作，也就是说，
+        在 Redis 中没有“double”类型。
+        只需将存储在键中的字符串解析为基本双精度浮点值，递增，然后转换回字符串。
+        没有 DECRYBYFLOAT 但提供负值将按预期工作。
+        时间复杂度：O(1)
+        */
+        System.out.println(jedis.set("key3", "57.6"));
+        System.out.println(jedis.expire("key3", 100));
+        System.out.println(jedis.incrByFloat("key3", 3.58));
+        System.out.println(jedis.incrByFloat("key3", 6.87));
+        System.out.println(jedis.incrByFloat("key3", -7.6));
+    }
+
+    @Test
+    void mget()
+    {
+        /*获取所有指定键的值。
+        如果一个或多个键不存在或不是 String 类型，则返回“nil”值而不是指定键的值，但操作永远不会失败。
+        时间复杂度：每个键的 O(1)
+        */
+        List<String> list = jedis.mget("key", "key1", "key2");
+        System.out.println(list);
+    }
+
+    @Test
+    void mset()
+    {
+        /*
+         将相应的键设置为相应的值。
+         MSET 将用新值替换旧值，而MSETNX根本不会执行任何操作，即使只有一个键已经存在。
+         由于这种语义，可以使用 MSETNX 来设置表示唯一逻辑对象的不同字段的不同键，以确保设置所有字段或根本没有设置。
+         MSET 和 MSETNX 都是原子操作。这意味着，
+         例如，如果密钥 A 和 B 被修改，另一个与 Redis 通信的连接可以同时看到 A 和 B 的更改，或者根本没有修改。
+         */
+        String mset = jedis.mset("key4", "value4", "key5", "value5", "key6", "value6");
+        System.out.println(mset);
+        Set<String> keys = jedis.keys("*");
+        System.out.println(keys);
+    }
+
+    @Test
+    void msetnx()
+    {
+
+    }
 }
